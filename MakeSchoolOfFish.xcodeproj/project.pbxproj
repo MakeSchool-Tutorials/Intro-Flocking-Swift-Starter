@@ -682,6 +682,7 @@
 					BCA010B61D2387DB0016AD85 = {
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = JA472UP5B6;
+						LastSwiftMigration = 0800;
 					};
 				};
 			};
@@ -1014,6 +1015,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.makeschool.MakeSchoolOfFish;
 				PRODUCT_NAME = FishSim;
 				PROVISIONING_PROFILE = "";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -1028,6 +1030,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.makeschool.MakeSchoolOfFish;
 				PRODUCT_NAME = FishSim;
 				PROVISIONING_PROFILE = "";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

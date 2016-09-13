@@ -79,7 +79,7 @@ class Fish: SKSpriteNode {
         return CGPoint(x: 0, y: 0)
     }
     
-    func vectorTo(point point: CGPoint) -> CGPoint {
+    func vectorTo(point: CGPoint) -> CGPoint {
         // TODO: Implement this!
         return CGPoint(x: 0, y: 0)
     }

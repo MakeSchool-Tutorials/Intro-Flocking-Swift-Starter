@@ -15,26 +15,26 @@ class PondScene: SKScene {
     var frameCount = 0
     var foodParticles: SKEmitterNode?
     var ripple: SKSpriteNode?
-    var tapTimer: NSTimer?
+    var tapTimer: Timer?
     var touchLocation: CGPoint?
     
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else {
             return
         }
-        touchLocation = touch.locationInNode(self)
+        touchLocation = touch.location(in: self)
         if touch.tapCount == 2 {
             tapTimer?.invalidate()
             tapTimer = nil
         }
     }
     
-    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else {
             return
         }
         if touch.tapCount == 1 {
-            tapTimer = NSTimer.scheduledTimerWithTimeInterval(0.2, target: self, selector: #selector(addFood), userInfo: nil, repeats: false)
+            tapTimer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(addFood), userInfo: nil, repeats: false)
         } else if touch.tapCount == 2 {
             addRipple()
         } else {
@@ -46,46 +46,46 @@ class PondScene: SKScene {
         foodParticles?.removeFromParent()
         foodParticles = SKEmitterNode(fileNamed: "Food")
         foodParticles?.zPosition = 25
-        if let foodParticles = foodParticles, location = touchLocation {
+        if let foodParticles = foodParticles, let location = touchLocation {
             foodParticles.position = location
             addChild(foodParticles)
             
-            let removeOnFinish = SKAction.runBlock({
+            let removeOnFinish = SKAction.run({
                 self.foodParticles?.removeFromParent()
                 self.foodParticles?.removeAllActions()
                 self.foodParticles = nil
             })
-            foodParticles.runAction(SKAction.sequence([SKAction.waitForDuration(7.5), removeOnFinish]))
+            foodParticles.run(SKAction.sequence([SKAction.wait(forDuration: 7.5), removeOnFinish]))
         }
     }
     
     func addRipple() {
         ripple?.removeFromParent()
-        ripple = SKReferenceNode(fileNamed: "Ripple")?.childNodeWithName("ripple") as? SKSpriteNode
+        ripple = SKReferenceNode(fileNamed: "Ripple")?.childNode(withName: "ripple") as? SKSpriteNode
         ripple?.removeFromParent()
         ripple?.alpha = 0.0
         ripple?.zPosition = 20
-        if let ripple = ripple, location = touchLocation {
+        if let ripple = ripple, let location = touchLocation {
             ripple.position = location
             addChild(ripple)
             
-            let removeOnFinish = SKAction.runBlock({
+            let removeOnFinish = SKAction.run({
                 self.ripple?.removeFromParent()
                 self.ripple?.removeAllActions()
                 self.ripple = nil
             })
-            ripple.runAction(SKAction.sequence([SKAction.waitForDuration(3), removeOnFinish]))
+            ripple.run(SKAction.sequence([SKAction.wait(forDuration: 3), removeOnFinish]))
         }
     }
     
-    override func update(currentTime: NSTimeInterval) {
+    override func update(_ currentTime: TimeInterval) {
         updateFish()
         updateSprites()
         restrainFish()
         frameCount += 1
     }
     
-    override func didMoveToView(view: SKView) {
+    override func didMove(to view: SKView) {
         for _ in 1...NumberOfFish {
             let fish = createFish()
             addChild(fish)
@@ -94,7 +94,7 @@ class PondScene: SKScene {
     }
     
     func createFish() -> Fish {
-        let fish = SKReferenceNode(fileNamed: "Fish")!.childNodeWithName("fish") as! Fish
+        let fish = SKReferenceNode(fileNamed: "Fish")!.childNode(withName: "fish") as! Fish
         fish.removeFromParent()
         fish.position = CGPoint(x: CGFloat.random(min: 0, max: size.width),
                                 y: CGFloat.random(min: 0, max: size.height))
@@ -116,9 +116,9 @@ class PondScene: SKScene {
             
             if speed > 0.1 && frameCount % 3 == 0 {
                 let rotationValue = shortestAngleBetween(fish.zRotation, angle2: fish.velocity.angle - (π / 2))
-                let rotate = SKAction.rotateByAngle(rotationValue, duration: 0.25)
-                fish.removeActionForKey("rotate")
-                fish.runAction(rotate, withKey: "rotate")
+                let rotate = SKAction.rotate(byAngle: rotationValue, duration: 0.25)
+                fish.removeAction(forKey: "rotate")
+                fish.run(rotate, withKey: "rotate")
             }
         }
     }
