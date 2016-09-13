@@ -19,7 +19,7 @@ class Fish: SKSpriteNode {
     var velocity: CGPoint = CGPoint.zero
     var delegate: FishDelegate!
     
-    // Cohension Constants
+    // Cohesion Constants
     let cohesionVisibleDistance: CGFloat = 160
     let cohesionWeight: CGFloat = 1000
     
@@ -40,7 +40,7 @@ class Fish: SKSpriteNode {
     let rippleWeight: CGFloat = 150
     
     // Steer towards other fish
-    func calculateCohension() -> CGPoint {
+    func calculateCohesion() -> CGPoint {
         let visibleFishPositions = delegate.fishPositions(within: cohesionVisibleDistance, of: self)
         let cohesion = vectorToCenterPoint(of: visibleFishPositions)
         return cohesion / cohesionWeight
