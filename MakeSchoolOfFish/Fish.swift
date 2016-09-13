@@ -41,47 +41,65 @@ class Fish: SKSpriteNode {
     
     // Steer towards other fish
     func calculateCohesion() -> CGPoint {
-        // TODO: Implement this!
-        return CGPoint(x: 0, y: 0)
+        let visibleFishPositions = delegate.fishPositions(within: cohesionVisibleDistance, of: self)
+        let cohesion = vectorToCenterPoint(of: visibleFishPositions)
+        return cohesion / cohesionWeight
     }
     
     // Keep fish separated so they do not overlap
     func calculateSeparation() -> CGPoint {
-        // TODO: Implement this!
-        return CGPoint(x: 0, y: 0)
+        let closeFishPositions = delegate.fishPositions(within: separationDistance, of: self)
+        let separation = vectorToCenterPoint(of: closeFishPositions) * -1
+        return separation / separationWeight
     }
     
     // Create a "hive mind" by mimicking nearby fish
     func calculateAlignment() -> CGPoint {
-        // TODO: Implement this!
-        return CGPoint(x: 0, y: 0)
+        let visibleFishVelocities = delegate.fishVelocities(within: alignmentVisibleDistance, of: self)
+        let alignment = average(of: visibleFishVelocities)
+        return alignment / alignmentWeight
     }
     
     // Head towards food (single tap)
     func calculateFood() -> CGPoint {
-        // TODO: Implement this!
-        return CGPoint(x: 0, y: 0)
+        if let foodLocation = delegate.foodLocation() {
+            if foodLocation.distanceTo(position) < foodVisibleDistance {
+                return vectorTo(point: foodLocation) / foodWeight
+            }
+        }
+        return CGPoint.zero
     }
     
     // Scatter away from ripples (double tap)
     func calculateRipple() -> CGPoint {
-        // TODO: Implement this!
-        return CGPoint(x: 0, y: 0)
+        if let rippleLocation = delegate.rippleLocation() {
+            if rippleLocation.distanceTo(position) < rippleVisibleDistance {
+                return vectorTo(point: rippleLocation) / rippleWeight * -1
+            }
+        }
+        return CGPoint.zero
     }
     
     func updateVelocity() {
-        // Sum up all your rules and call clampVelocity!
+        let cohesion = calculateCohesion()
+        let separation = calculateSeparation()
+        let alignment = calculateAlignment()
+        let food = calculateFood()
+        let ripple = calculateRipple()
         
+        velocity = sum(of: [velocity, cohesion, separation, alignment, food, ripple])
+        clampVelocity()
     }
     
     func vectorToCenterPoint(of points: [CGPoint]) -> CGPoint {
-        // TODO: Implement this!
-        return CGPoint(x: 0, y: 0)
+        if points.count == 0 {
+            return CGPoint.zero
+        }
+        return vectorTo(point: average(of: points))
     }
     
     func vectorTo(point: CGPoint) -> CGPoint {
-        // TODO: Implement this!
-        return CGPoint(x: 0, y: 0)
+        return point - position
     }
     
     // We implemented this for you. It takes the current velocity and makes sure
@@ -97,11 +115,13 @@ class Fish: SKSpriteNode {
 // MARK: Math Helpers
 
 func sum(of points: [CGPoint]) -> CGPoint {
-    // TODO: Implement this!
-    return CGPoint(x: 0, y: 0)
+    // Or done with a for-loop
+    return points.reduce(CGPoint.zero, +)
 }
 
 func average(of points: [CGPoint]) -> CGPoint {
-    // TODO: Implement this!
-    return CGPoint(x: 0, y: 0)
+    if points.count == 0 {
+        return CGPoint.zero
+    }
+    return sum(of: points) / CGFloat(points.count)
 }
